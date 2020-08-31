@@ -44,6 +44,12 @@ class BootexamineApplicationTests {
 	public void tearDown() throws Exception { }
 
 	@Test
+	void hello_thenOk() throws Exception {
+		mockMvc.perform(get("/hello"))
+				.andExpect(status().isOk());
+	}
+
+	@Test
 	void addDocument_thenOk() throws Exception {
 		mockMvc.perform(post("/document")
 				.content("{\"documentNumber\":\"A\",\"description\":\"AAA\"}")
@@ -82,7 +88,7 @@ class BootexamineApplicationTests {
 		).andReturn();
 		String json = result.getResponse().getContentAsString();
 		Document createdDoc = new ObjectMapper().readValue(json, Document.class);
-		//GET
+		//UPDATE
 		mockMvc.perform(put("/document/"+ createdDoc.getId() +"")
 				.content("{\"documentNumber\":\"Bedit\",\"description\":\"BBBedit\"}")
 				.contentType("application/json"))
@@ -98,8 +104,15 @@ class BootexamineApplicationTests {
 		).andReturn();
 		String json = result.getResponse().getContentAsString();
 		Document createdDoc = new ObjectMapper().readValue(json, Document.class);
-		//GET
+		//DELETE
 		mockMvc.perform(delete("/document/"+ createdDoc.getId() +""))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void deleteDocumentNotFound_thenOk() throws Exception {
+		//DELETE
+		mockMvc.perform(delete("/document/4444"))
 				.andExpect(status().isOk());
 	}
 
