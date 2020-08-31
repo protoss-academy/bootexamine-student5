@@ -1,6 +1,7 @@
 package com.protosstechnology.train.bootexamine.controller;
 
 import com.protosstechnology.train.bootexamine.model.Document;
+import com.protosstechnology.train.bootexamine.model.DocumentRequest;
 import com.protosstechnology.train.bootexamine.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -51,16 +52,18 @@ public class DocumentController {
     }
 
     @PostMapping
-    public ResponseEntity<Document> addDocument(@RequestBody Document doc){
+    public ResponseEntity<Document> addDocument(@RequestBody DocumentRequest docReq){
         log.info("addDocument");
+        Document doc = docReq.toDocument();
         documentService.create(doc);
         log.info("document id={}", doc.getId());
         return ResponseEntity.ok().body(doc);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Document> updateDocument(@PathVariable("id") String id, @RequestBody Document doc){
+    public ResponseEntity<Document> updateDocument(@PathVariable("id") String id, @RequestBody DocumentRequest docReq){
         log.info("updateDocument");
+        Document doc = docReq.toDocument();
         doc.setId(Integer.parseInt(id));
         documentService.update(doc);
         return ResponseEntity.ok().body(doc);
